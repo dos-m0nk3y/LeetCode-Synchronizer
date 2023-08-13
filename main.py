@@ -1,5 +1,6 @@
 import os
 import time
+import json
 import pathlib
 import requests
 import datetime
@@ -107,6 +108,19 @@ def sync_github(commits, submissions):
             repo.git.push("origin")
             os.unsetenv("GIT_AUTHOR_DATE")
             os.unsetenv("GIT_COMMITTER_DATE")
+
+            new_submission = {"id": submission["id"], "title": submission["title"], "difficulty": submission["difficulty"], "skills": submission["skills"]}
+
+            saved_submissions = list()
+            if os.path.isfile("submissions.json"):
+                with open("submissions.json", "rt") as fd:
+                    saved_submissions = json.load(fd)
+
+            if new_submission not in saved_submissions:
+                saved_submissions.append(new_submission)
+                # update_readme(saved_submissions)
+                with open("submissions.json", "wt") as fd:
+                    json.dump(saved_submissions, fd, ensure_ascii=False, indent=2)
 
 
 def main():
