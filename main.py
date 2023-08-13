@@ -119,6 +119,7 @@ def sync_github(commits, submissions):
                 content += submission["content"].strip()
                 fd.write(content)
 
+            submission["skills"].sort()
             new_submission = {
                 "id": submission["id"],
                 "title": submission["title"],
