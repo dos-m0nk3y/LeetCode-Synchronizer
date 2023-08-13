@@ -98,17 +98,6 @@ def sync_github(commits, submissions):
                 content += submission["content"].strip()
                 fd.write(content)
 
-            # RFC 2822 (Thu, 07 Apr 2005 22:13:13 +0200) / ISO 8601 (2005-04-07T22:13:13)
-            # https://github.com/gitpython-developers/GitPython/blob/master/git/objects/util.py#L134
-            iso_datetime = email.utils.format_datetime(datetime.datetime.fromtimestamp(submission["timestamp"]))
-            os.environ["GIT_AUTHOR_DATE"] = iso_datetime
-            os.environ["GIT_COMMITTER_DATE"] = iso_datetime
-            repo.index.add("**")
-            repo.index.commit(commit_message)
-            repo.git.push("origin")
-            os.unsetenv("GIT_AUTHOR_DATE")
-            os.unsetenv("GIT_COMMITTER_DATE")
-
             new_submission = {"id": submission["id"], "title": submission["title"], "difficulty": submission["difficulty"], "skills": submission["skills"]}
 
             saved_submissions = list()
@@ -121,6 +110,17 @@ def sync_github(commits, submissions):
                 # update_readme(saved_submissions)
                 with open("submissions.json", "wt") as fd:
                     json.dump(saved_submissions, fd, ensure_ascii=False, indent=2)
+
+            # RFC 2822 (Thu, 07 Apr 2005 22:13:13 +0200) / ISO 8601 (2005-04-07T22:13:13)
+            # https://github.com/gitpython-developers/GitPython/blob/master/git/objects/util.py#L134
+            iso_datetime = email.utils.format_datetime(datetime.datetime.fromtimestamp(submission["timestamp"]))
+            os.environ["GIT_AUTHOR_DATE"] = iso_datetime
+            os.environ["GIT_COMMITTER_DATE"] = iso_datetime
+            repo.index.add("**")
+            repo.index.commit(commit_message)
+            repo.git.push("origin")
+            os.unsetenv("GIT_AUTHOR_DATE")
+            os.unsetenv("GIT_COMMITTER_DATE")
 
 
 def main():
