@@ -107,6 +107,7 @@ def sync_github(commits, submissions):
 
             if new_submission not in saved_submissions:
                 saved_submissions.append(new_submission)
+                saved_submissions = sorted(saved_submissions, key=lambda entry: entry["id"])
                 # update_readme(saved_submissions)
                 with open("submissions.json", "wt") as fd:
                     json.dump(saved_submissions, fd, ensure_ascii=False, indent=2)
