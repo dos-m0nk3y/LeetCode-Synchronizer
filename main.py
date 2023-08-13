@@ -66,6 +66,27 @@ def scrape_leetcode():
     return sorted(solved_problems, key=lambda entry: entry["timestamp"])
 
 
+def update_readme(submissions):
+    template = """
+# LeetCode Submissions
+
+> Auto-generated with [LeetCode Synchronizer](https://github.com/dos-m0nk3y/LeetCode-Synchronizer)
+
+## Contents
+
+| # | Title | Difficulty | Skills |
+|---| ----- | ---------- | ------ |
+"""
+
+    for submission in submissions:
+        title = f"[{submission['title']}](https://leetcode.com/problems/{submission['title_slug']})"
+        skills = " ".join([f"`{skill}`" for skill in submission["skills"]])
+        template += f"| {str(submission['id']).zfill(4)} | {title} | {submission['difficulty']} | {skills} |\n"
+
+    with open("README.md", "wt") as fd:
+        fd.write(template.strip())
+
+
 def sync_github(commits, submissions):
     repo = Repo(os.getcwd())
     url = urllib.parse.urlparse(repo.remote("origin").url)
@@ -98,7 +119,13 @@ def sync_github(commits, submissions):
                 content += submission["content"].strip()
                 fd.write(content)
 
-            new_submission = {"id": submission["id"], "title": submission["title"], "difficulty": submission["difficulty"], "skills": submission["skills"]}
+            new_submission = {
+                "id": submission["id"],
+                "title": submission["title"],
+                "title_slug": submission["title_slug"],
+                "difficulty": submission["difficulty"],
+                "skills": submission["skills"],
+            }
 
             saved_submissions = list()
             if os.path.isfile("submissions.json"):
@@ -108,7 +135,7 @@ def sync_github(commits, submissions):
             if new_submission not in saved_submissions:
                 saved_submissions.append(new_submission)
                 saved_submissions = sorted(saved_submissions, key=lambda entry: entry["id"])
-                # update_readme(saved_submissions)
+                update_readme(saved_submissions)
                 with open("submissions.json", "wt") as fd:
                     json.dump(saved_submissions, fd, ensure_ascii=False, indent=2)
 
