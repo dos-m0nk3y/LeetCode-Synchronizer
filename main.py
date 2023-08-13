@@ -78,7 +78,7 @@ def sync_github(commits, submissions):
     repo.config_writer().set_value("user", "email", commit.author.email).release()
 
     for submission in submissions:
-        commit_message = f"Sync LeetCode Submission - {submission['title']} ({submission['language']})"
+        commit_message = f"LeetCode Synchronization - {submission['title']} ({submission['language']})"
         if commit_message not in commits or commits[commit_message] < submission["timestamp"]:
             dir_name = f"{str(submission['id']).zfill(4)}-{submission['title_slug']}"
             if submission["language"] == "C++":
