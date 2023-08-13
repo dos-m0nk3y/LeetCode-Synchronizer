@@ -9,6 +9,7 @@ Here's a sample repository created using LeetCode Synchronizer: [leetcode-synchr
 - Fully automated collection of all your latest accepted submissions with minimal effort setup
 - Single commit for each submission stamped with the original submission date for building rich and accurate contributions graph
 - Automated git pushes to the remote repository with every action triggers
+- Auto-generate README.md based on retrieved submissions
 
 ## Setup
 
@@ -47,7 +48,7 @@ Here's a sample repository created using LeetCode Synchronizer: [leetcode-synchr
          runs-on: ubuntu-latest
          steps:
            - name: Run LeetCode Synchronizer
-             uses: dos-m0nk3y/LeetCode-Synchronizer@v1.0.0
+             uses: dos-m0nk3y/LeetCode-Synchronizer@v1.1.0
              with:
                GITHUB_TOKEN: ${{ github.token }}
                LEETCODE_SESSION: ${{ secrets.LEETCODE_SESSION }}
